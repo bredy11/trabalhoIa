@@ -30,7 +30,10 @@ public class MainController {
 		
 		populacoes = populacao.validarPopulacao(cidadeInicial, cidadeFinal, populacoes, cidades);
 		
-		populacao.cross(populacoes, cidades,cidadeInicial, cidadeFinal,grafo);
+		populacoes = populacao.cross(populacoes, cidades,cidadeInicial, cidadeFinal);
+		
+		String melhorCromo = populacao.melhorCaminho(populacoes, grafo);
+		
 	}
 
 }

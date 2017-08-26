@@ -9,7 +9,7 @@ import java.util.Set;
 
 public class Populacao {
 
-	private int nInt = 40000;
+	private int nInt = 20000;
 	// private int nCroms = 3;
 	private Integer newPop[] = new Integer[nInt];
 	private String populacaoEmBinario[] = new String[nInt];
@@ -97,7 +97,7 @@ public class Populacao {
 
 	}
 
-	public void cross(List<String> pais, Map<String, Cidade> cidades ,String cidadeIncial, String cidadeFinal, Grafo grafo) {
+	public List<String> cross(List<String> pais, Map<String, Cidade> cidades, String cidadeIncial, String cidadeFinal) {
 		Random posicaoDeTroca = new Random();
 		List<String> filhos = new ArrayList<>();
 		for (int cont = 0; cont < 2000; cont++)
@@ -127,12 +127,15 @@ public class Populacao {
 							: cromoMae[posicaoDeTroca.nextInt(2)];
 					cromoFilho += posicaoDeTroca.nextInt(2) == 1 ? cromoPai[posicaoDeTroca.nextInt(2)]
 							: cromoMae[posicaoDeTroca.nextInt(2)];
+					filhos.add(cromoFilho);
 				}
 
 			}
 
-	filhos =	validarPopulacaoFilho(cidadeIncial, cidadeFinal, filhos, cidades,grafo);
-	System.out.println(filhos);
+		filhos = validarPopulacaoFilho(cidadeIncial, cidadeFinal, filhos, cidades);
+		System.out.println(filhos);
+
+		return filhos;
 	}
 
 	private String[] fazerVector(String cromo, int tamanho, int quebrarEm) {
@@ -161,29 +164,28 @@ public class Populacao {
 		}
 
 	}
-	
-	public List<String> validarPopulacaoFilho(String cidadeInicial, String cidadeFinal, List<String> populacao,
-			Map<String, Cidade> cidades,Grafo grafo) {
-       
-		for (int i = populacao.size(); 0 < i; i--) {
-			System.out.println(i);
-			if (!populacao.get(i - 1).substring(0,1).equals(cidadeInicial)) {
-				populacao.remove(i - 1);
-				continue;
-			}
-			// se no caminho passa pela a cidade final em algum momento
-			if (!populacao.get(i - 1).substring(7,8).equals(cidadeFinal)) {
-				populacao.remove(i - 1);
-				continue;
-			}
 
+	public List<String> validarPopulacaoFilho(String cidadeInicial, String cidadeFinal, List<String> populacao,
+			Map<String, Cidade> cidades) {
+
+		for (int i = populacao.size(); 0 < i; i--) {
+			// valida se a cidade pai ta na primeira posicao
+			if (!populacao.get(i - 1).substring(0, 1).equals(cidadeInicial)) {
+				populacao.remove(i - 1);
+				continue;
+			}
+			// se a cidade final e o ultimo ponto do cromo
+			if (!populacao.get(i - 1).substring(7, 8).equals(cidadeFinal)) {
+				populacao.remove(i - 1);
+				continue;
+			}
+			// validar se os caminhos sao validos
 			char cidadeChar[] = populacao.get(i - 1).toCharArray();
 			for (int j = 1; j < cidades.size(); j++) {
 
 				Cidade cidade = cidades.get(String.valueOf(cidadeChar[j - 1]));
 				Cidade cidade2 = cidades.get(String.valueOf(cidadeChar[j]));
-	
-				
+
 				if (cidade.equals(cidade2)) {
 					continue;
 				}
@@ -195,16 +197,38 @@ public class Populacao {
 				}
 
 			}
-		}	
-		Set<String> test = new HashSet<>(populacao);
+		}
 
 		return populacao;
-		
+
 	}
-	
-	
-	
-	
+
+	public String melhorCaminho(List<String> populacao, Grafo grafo) {
+		String cromoComMenorPeso = "";
+		int menorPeso = 1000;
+		Set<String> listaDeCromoComPesoIgual = new HashSet<>();
+		for (int i = 0; i < populacao.size(); i++) {
+			String cromoEmAnalise = populacao.get(i);
+			int peso = grafo.avaliarPesoCromo(cromoEmAnalise);
+			
+			if (peso < menorPeso) {
+
+				cromoComMenorPeso = populacao.get(i);
+				menorPeso = peso;
+		
+			} else if (peso == menorPeso) {
+				
+				if (!cromoComMenorPeso.equals(cromoEmAnalise)) {
+					cromoComMenorPeso = populacao.get(i);
+					menorPeso = peso;
+					listaDeCromoComPesoIgual.add(populacao.get(i));
+				}
+			}
+
+		}
+		return "";
+	}
+
 	public void printarVector(String vecto[]) {
 
 		for (String integer : vecto) {
