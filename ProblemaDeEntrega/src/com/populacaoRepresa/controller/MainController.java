@@ -33,6 +33,9 @@ public class MainController {
 		populacoes = populacao.cross(populacoes, cidades,cidadeInicial, cidadeFinal);
 		
 		String melhorCromo = populacao.melhorCaminho(populacoes, grafo);
+		int peso= grafo.avaliarPesoCromo(melhorCromo);
+		System.out.println(String.format("Cromo: %s  peso: %d", melhorCromo , peso));
+		
 		
 	}
 

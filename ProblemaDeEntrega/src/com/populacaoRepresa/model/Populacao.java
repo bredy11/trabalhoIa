@@ -63,7 +63,7 @@ public class Populacao {
 			Map<String, Cidade> cidades) {
 
 		for (int i = populacao.size(); 0 < i; i--) {
-			System.out.println(i);
+		
 			if (!populacao.get(i - 1).contains(cidadeInicial)) {
 				populacao.remove(i - 1);
 				continue;
@@ -100,6 +100,7 @@ public class Populacao {
 	public List<String> cross(List<String> pais, Map<String, Cidade> cidades, String cidadeIncial, String cidadeFinal) {
 		Random posicaoDeTroca = new Random();
 		List<String> filhos = new ArrayList<>();
+	
 		for (int cont = 0; cont < 2000; cont++)
 			for (int i = 0; i < pais.size() - 1; i++) {
 				String pai = pais.get(i);
@@ -119,6 +120,16 @@ public class Populacao {
 							: cromoMae[posicaoDeTroca.nextInt(4)];
 					cromoFilho += posicaoDeTroca.nextInt(2) == 1 ? cromoPai[posicaoDeTroca.nextInt(4)]
 							: cromoMae[posicaoDeTroca.nextInt(4)];
+
+					if (posicaoDeTroca.nextInt(200) == 1) {
+						String filhoVec[] = fazerVector(cromoFilho, 2, 4);
+						cromoFilho = "";
+
+						cromoFilho += filhoVec[posicaoDeTroca.nextInt(2)];
+						cromoFilho += filhoVec[posicaoDeTroca.nextInt(2)];
+						
+					}
+
 					filhos.add(cromoFilho);
 				} else {
 					String cromoPai[] = fazerVector(pai, 2, 4);
@@ -127,13 +138,24 @@ public class Populacao {
 							: cromoMae[posicaoDeTroca.nextInt(2)];
 					cromoFilho += posicaoDeTroca.nextInt(2) == 1 ? cromoPai[posicaoDeTroca.nextInt(2)]
 							: cromoMae[posicaoDeTroca.nextInt(2)];
+
+					// mutacao
+					if (posicaoDeTroca.nextInt(200) == 1) {
+						String filhoVec[] = fazerVector(cromoFilho, 4, 2);
+						cromoFilho = "";
+						cromoFilho += filhoVec[posicaoDeTroca.nextInt(4)];
+						cromoFilho += filhoVec[posicaoDeTroca.nextInt(4)];
+						cromoFilho += filhoVec[posicaoDeTroca.nextInt(4)];
+						cromoFilho += filhoVec[posicaoDeTroca.nextInt(4)];
+					
+					}
+
 					filhos.add(cromoFilho);
 				}
 
 			}
 
 		filhos = validarPopulacaoFilho(cidadeIncial, cidadeFinal, filhos, cidades);
-		System.out.println(filhos);
 
 		return filhos;
 	}
@@ -210,14 +232,14 @@ public class Populacao {
 		for (int i = 0; i < populacao.size(); i++) {
 			String cromoEmAnalise = populacao.get(i);
 			int peso = grafo.avaliarPesoCromo(cromoEmAnalise);
-			
+
 			if (peso < menorPeso) {
 
 				cromoComMenorPeso = populacao.get(i);
 				menorPeso = peso;
-		
+				// listaDeCromoComPesoIgual.clear();
 			} else if (peso == menorPeso) {
-				
+
 				if (!cromoComMenorPeso.equals(cromoEmAnalise)) {
 					cromoComMenorPeso = populacao.get(i);
 					menorPeso = peso;
@@ -226,7 +248,7 @@ public class Populacao {
 			}
 
 		}
-		return "";
+		return cromoComMenorPeso;
 	}
 
 	public void printarVector(String vecto[]) {
