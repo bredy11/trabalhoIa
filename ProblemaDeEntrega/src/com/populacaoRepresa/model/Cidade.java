@@ -7,11 +7,18 @@ public class Cidade {
 	private String nome;
 	private ArrayList<Cidade> ligaçoes = new ArrayList<>();
 	
-	public Cidade(String nome) {
-		this.nome= nome;
-		
-	}
 	
+	
+	public Cidade(int numero) {
+		super();
+		this.numero = numero;
+	}
+
+	public Cidade(String nome) {
+		super();
+		this.nome = nome;
+	}
+
 	public void inserirCidade(String nome) {
 		ligaçoes.add(new Cidade(nome));
 	}

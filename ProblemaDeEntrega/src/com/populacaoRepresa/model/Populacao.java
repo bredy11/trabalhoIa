@@ -97,7 +97,7 @@ public class Populacao {
 
 	}
 
-	public void cross(List<String> pais, Map<String, Cidade> cidades ,String cidadeIncial, String cidadeFinal) {
+	public void cross(List<String> pais, Map<String, Cidade> cidades ,String cidadeIncial, String cidadeFinal, Grafo grafo) {
 		Random posicaoDeTroca = new Random();
 		List<String> filhos = new ArrayList<>();
 		for (int cont = 0; cont < 2000; cont++)
@@ -131,7 +131,7 @@ public class Populacao {
 
 			}
 
-	filhos =	validarPopulacaoFilho(cidadeIncial, cidadeFinal, filhos, cidades,null);
+	filhos =	validarPopulacaoFilho(cidadeIncial, cidadeFinal, filhos, cidades,grafo);
 	System.out.println(filhos);
 	}
 
